@@ -1,0 +1,85 @@
+{
+  "schemaVersion": 1,
+  "id": "pomodoro",
+  "name": "Pomodoro",
+  "version": "1.0.0",
+  "author": "Bruno",
+  "license": "MIT",
+  "description": "Pomodoro timer in the Omarchy bar: pick a focus or break duration from the panel, run a countdown, and get a desktop notification with a chime when time is up.",
+  "kinds": [
+    "service",
+    "bar-widget",
+    "panel"
+  ],
+  "activation": "on-demand",
+  "entryPoints": {
+    "service": "Service.qml",
+    "barWidget": "BarWidget.qml",
+    "panel": "Panel.qml"
+  },
+  "barWidget": {
+    "displayName": "Pomodoro",
+    "description": "Start, pause and reset a pomodoro timer. The bar shows the remaining time; the panel lets you pick the duration and is notified with a sound when it finishes.",
+    "category": "Productivity",
+    "allowMultiple": false,
+    "defaultSection": "right",
+    "defaults": {
+      "focusMinutes": 25,
+      "shortBreakMinutes": 5,
+      "longBreakMinutes": 15,
+      "defaultMode": "focus",
+      "soundEnabled": true
+    },
+    "schema": [
+      {
+        "key": "focusMinutes",
+        "type": "integer",
+        "label": "Focus (minutes)",
+        "min": 1,
+        "max": 180,
+        "step": 1,
+        "defaultValue": 25,
+        "description": "Default duration of a focus session."
+      },
+      {
+        "key": "shortBreakMinutes",
+        "type": "integer",
+        "label": "Short break (minutes)",
+        "min": 1,
+        "max": 60,
+        "step": 1,
+        "defaultValue": 5,
+        "description": "Default duration of a short break."
+      },
+      {
+        "key": "longBreakMinutes",
+        "type": "integer",
+        "label": "Long break (minutes)",
+        "min": 1,
+        "max": 120,
+        "step": 1,
+        "defaultValue": 15,
+        "description": "Default duration of a long break."
+      },
+      {
+        "key": "defaultMode",
+        "type": "enum",
+        "label": "Default mode",
+        "options": [
+          "focus",
+          "short-break",
+          "long-break"
+        ],
+        "defaultValue": "focus",
+        "description": "Which mode a new timer starts in."
+      },
+      {
+        "key": "soundEnabled",
+        "type": "boolean",
+        "label": "Play sound when time is up",
+        "defaultValue": true,
+        "description": "Play a chime in addition to the desktop notification."
+      }
+    ]
+  }
+}
