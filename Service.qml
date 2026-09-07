@@ -22,7 +22,9 @@ Item {
   property var barWidgetRegistry: null
 
   readonly property string pluginId: manifest && manifest.id ? String(manifest.id) : "omafocus"
-  readonly property string omarchyPath: Quickshell.env("OMARCHY_PATH") || "/usr/lib/omarchy"
+  // Writable so the shell's injected value (which is authoritative) wins over
+  // the env fallback.
+  property string omarchyPath: Quickshell.env("OMARCHY_PATH") || "/usr/lib/omarchy"
 
   final property string modeFocusKey: "focus"
   final property string modeShortKey: "short-break"
@@ -95,7 +97,7 @@ Item {
     running = false
     finished = false
     mode = m
-    totalSeconds = modeMinutes(m)
+    totalSeconds = modeMinutes(m) * 60
     remainingSeconds = totalSeconds
     emitState()
   }
@@ -190,11 +192,11 @@ Item {
     emitState()
   }
 
-  signal stateChanged()
+  signal statusChanged()
   function emitState() {
     var i = _epoch + 1
     _epoch = i
-    stateChanged()
+    statusChanged()
   }
   property int _epoch: 0
 

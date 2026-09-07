@@ -264,10 +264,15 @@ Panel {
                   width: parent.width
                   spacing: Style.space(2)
 
-                  Row {
+                  Item {
                     width: parent.width
+                    height: Style.font.caption * 1.4
 
                     Text {
+                      anchors.left: parent.left
+                      anchors.right: chipItem.left
+                      anchors.verticalCenter: parent.verticalCenter
+                      anchors.rightMargin: Style.space(2)
                       textFormat: Text.PlainText
                       text: root.modeTitle.toUpperCase()
                       color: root.dim
@@ -279,8 +284,10 @@ Panel {
                     }
 
                     Text {
-                      textFormat: Text.PlainText
+                      id: chipItem
                       anchors.right: parent.right
+                      anchors.verticalCenter: parent.verticalCenter
+                      textFormat: Text.PlainText
                       text: root.statusChip
                       color: root.timerFinished ? root.urgent : root.dim
                       font.family: root.fontFamily

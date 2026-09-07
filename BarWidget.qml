@@ -24,6 +24,9 @@ BarWidget {
     ? root.glyph + " " + root.label
     : (root.vertical ? "" : root.glyph)
 
+  implicitWidth: button.implicitWidth
+  implicitHeight: button.implicitHeight
+
   function pushSettings() {
     if (service && typeof service.applySettings === "function") service.applySettings(settings)
   }
@@ -96,8 +99,8 @@ BarWidget {
     tooltipText: root.service ? root.service.tooltip : "Omafocus"
     labelVisible: !root.vertical
     hasVisualContent: root.buttonText !== ""
-    horizontalMargin: 8.75
-    verticalPadding: 8.75
+    horizontalMargin: 11.75
+    verticalPadding: 10.5
 
     onPressed: function(b) {
       if (b === Qt.RightButton) { if (root.service) root.service.toggle() }
