@@ -3,7 +3,7 @@
   "id": "omafocus",
   "name": "Omafocus",
   "version": "1.0.0",
-  "author": "Bruno",
+  "author": "Bruno Queiroz",
   "license": "MIT",
   "description": "Omafocus timer in the Omarchy bar: pick a focus or break duration from the panel, run a countdown, and get a desktop notification with a chime when time is up.",
   "kinds": [
