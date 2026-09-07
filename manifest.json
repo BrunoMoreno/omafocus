@@ -1,11 +1,11 @@
 {
   "schemaVersion": 1,
-  "id": "pomodoro",
-  "name": "Pomodoro",
+  "id": "omafocus",
+  "name": "Omafocus",
   "version": "1.0.0",
   "author": "Bruno",
   "license": "MIT",
-  "description": "Pomodoro timer in the Omarchy bar: pick a focus or break duration from the panel, run a countdown, and get a desktop notification with a chime when time is up.",
+  "description": "Omafocus timer in the Omarchy bar: pick a focus or break duration from the panel, run a countdown, and get a desktop notification with a chime when time is up.",
   "kinds": [
     "service",
     "bar-widget",
@@ -18,8 +18,8 @@
     "panel": "Panel.qml"
   },
   "barWidget": {
-    "displayName": "Pomodoro",
-    "description": "Start, pause and reset a pomodoro timer. The bar shows the remaining time; the panel lets you pick the duration and is notified with a sound when it finishes.",
+    "displayName": "Omafocus",
+    "description": "Start, pause and reset a focus timer. The bar shows the remaining time; the panel lets you pick the duration and is notified with a sound when it finishes.",
     "category": "Productivity",
     "allowMultiple": false,
     "defaultSection": "right",

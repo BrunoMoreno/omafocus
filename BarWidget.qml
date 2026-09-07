@@ -1,32 +1,40 @@
 import QtQuick
 import Quickshell
+import Quickshell.Io
 import qs.Commons
 import qs.Ui
 
-// Bar icon for the pomodoro timer. Reads the shared countdown service and
+// Bar icon for the omafocus timer. Reads the shared countdown service and
 // opens the config panel on click. Every bar instance is a thin observer of
 // the same service singleton, so monitors never disagree about the time.
 BarWidget {
   id: root
 
-  moduleName: "pomodoro"
+  moduleName: "omafocus"
 
   readonly property var service: bar && bar.shell
-    ? bar.shell.serviceFor("pomodoro") : null
+    ? bar.shell.serviceFor("omafocus") : null
 
   readonly property bool idle: !service
     || (!service.running && service.remainingSeconds === service.totalSeconds && !service.finished)
 
   readonly property string label: service ? service.display : ""
   readonly property string glyph: service ? service.glyph : "󰄉"
+  readonly property string buttonText: root.label !== ""
+    ? root.glyph + " " + root.label
+    : (root.vertical ? "" : root.glyph)
 
   function pushSettings() {
     if (service && typeof service.applySettings === "function") service.applySettings(settings)
   }
 
-  onSettingsChanged: pushSettings()
-  onServiceChanged: pushSettings()
-  Component.onCompleted: pushSettings()
+  function syncInline() {
+    root.pushSettings()
+    root.injectPanel()
+  }
+
+  onServiceChanged: syncInline()
+  Component.onCompleted: syncInline()
 
   // ---- Panel popup. Shape contract for shell.summon/hide/toggle routing:
   //      the bar expects open/close/opened on the bar-widget root.
@@ -50,7 +58,7 @@ BarWidget {
   }
 
   onBarChanged: injectPanel()
-  onSettingsChanged: injectPanel()
+  onSettingsChanged: syncInline()
 
   Loader {
     id: panelLoader
@@ -64,7 +72,7 @@ BarWidget {
   }
 
   IpcHandler {
-    target: "pomodoro"
+    target: "omafocus"
 
     function open(): void { root.open() }
     function close(): void { root.close() }
@@ -76,31 +84,20 @@ BarWidget {
     function stop(): void { if (root.service) root.service.stop() }
   }
 
-  // The button shows a small corner dot while a countdown is active, like the
-  // other indicators — but keeps the live countdown text on the label itself.
+  // Button shows the timer glyph, with the live countdown appended while a
+  // session is running. Right-click toggles, middle-click resets, left opens
+  // the panel.
 
   WidgetButton {
     id: button
     anchors.fill: parent
     bar: root.bar
-    text: root.idle ? "" : root.label
-    tooltipText: root.service ? root.service.tooltip : "Pomodoro"
+    text: root.buttonText
+    tooltipText: root.service ? root.service.tooltip : "Omafocus"
     labelVisible: !root.vertical
-    hasVisualContent: root.label !== "" || !root.vertical
+    hasVisualContent: root.buttonText !== ""
     horizontalMargin: 8.75
     verticalPadding: 8.75
-
-    iconComponent: Component {
-      Item {
-        OpticalGlyph {
-          anchors.fill: parent
-          text: root.glyph
-          fontFamily: button.fontFamily
-          fontSize: button.fontSize
-          color: button.foreground
-        }
-      }
-    }
 
     onPressed: function(b) {
       if (b === Qt.RightButton) { if (root.service) root.service.toggle() }

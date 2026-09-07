@@ -3,7 +3,7 @@ import Quickshell
 import Quickshell.Io
 import qs.Commons
 
-// Headless pomodoro countdown shared by every bar instance. One timer runs
+// Headless omafocus countdown shared by every bar instance. One timer runs
 // here, not per monitor, so multiple bar widgets and the panel all observe
 // the same remaining time without drifting apart.
 //
@@ -21,12 +21,12 @@ Item {
   property var pluginRegistry: null
   property var barWidgetRegistry: null
 
-  readonly property string pluginId: manifest && manifest.id ? String(manifest.id) : "pomodoro"
+  readonly property string pluginId: manifest && manifest.id ? String(manifest.id) : "omafocus"
   readonly property string omarchyPath: Quickshell.env("OMARCHY_PATH") || "/usr/lib/omarchy"
 
-  final property string MODE_FOCUS: "focus"
-  final property string MODE_SHORT: "short-break"
-  final property string MODE_LONG: "long-break"
+  final property string modeFocusKey: "focus"
+  final property string modeShortKey: "short-break"
+  final property string modeLongKey: "long-break"
 
   readonly property var defaultSettingValues: ({
     focusMinutes: 25,
@@ -66,14 +66,14 @@ Item {
   // ------------------------------------------------------------- duration
   function modeMinutes(mode) {
     var m = String(mode || "")
-    if (m === MODE_SHORT) return clampMin(Number(settings.shortBreakMinutes || 5), 1, 60)
-    if (m === MODE_LONG) return clampMin(Number(settings.longBreakMinutes || 15), 1, 120)
+    if (m === modeShortKey) return clampMin(Number(settings.shortBreakMinutes || 5), 1, 60)
+    if (m === modeLongKey) return clampMin(Number(settings.longBreakMinutes || 15), 1, 120)
     return clampMin(Number(settings.focusMinutes || 25), 1, 180)
   }
 
   function defaultMode() {
     var m = String(settings.defaultMode || "focus")
-    if (m !== MODE_SHORT && m !== MODE_LONG) return MODE_FOCUS
+    if (m !== modeShortKey && m !== modeLongKey) return modeFocusKey
     return m
   }
 
@@ -89,8 +89,8 @@ Item {
   property bool finished: false
 
   function setMode(nextMode) {
-    var m = String(nextMode || MODE_FOCUS)
-    if (m !== MODE_SHORT && m !== MODE_LONG) m = MODE_FOCUS
+    var m = String(nextMode || modeFocusKey)
+    if (m !== modeShortKey && m !== modeLongKey) m = modeFocusKey
     timer.stop()
     running = false
     finished = false
@@ -142,14 +142,14 @@ Item {
 
   // ------------------------------------------------------------- display
   readonly property string modeLabel: {
-    if (mode === MODE_SHORT) return "Short break"
-    if (mode === MODE_LONG) return "Long break"
+    if (mode === modeShortKey) return "Short break"
+    if (mode === modeLongKey) return "Long break"
     return "Focus"
   }
 
   readonly property string glyph: {
-    if (mode === MODE_SHORT) return "󰥔"
-    if (mode === MODE_LONG) return "󰥔"
+    if (mode === modeShortKey) return "󰥔"
+    if (mode === modeLongKey) return "󰥔"
     return "󰄉"
   }
 
@@ -164,9 +164,9 @@ Item {
     ? formattedRemaining() : ""
 
   readonly property string tooltip: {
-    if (remainingSeconds === totalSeconds && !running) return "Pomodoro · Ready"
+    if (remainingSeconds === totalSeconds && !running) return "Omafocus · Ready"
     var tail = finished ? " — time's up!" : ""
-    return "Pomodoro · " + modeLabel + " · " + formattedRemaining() + tail
+    return "Omafocus · " + modeLabel + " · " + formattedRemaining() + tail
   }
 
   // ------------------------------------------------------------- ticking
@@ -206,8 +206,8 @@ Item {
 
   function notifyComplete() {
     var glyph = root.glyph
-    var args = ["--app-name", "Pomodoro", "-g", glyph, "-u", "normal",
-      "Pomodoro finished", root.modeLabel + " is over. Take a break!"]
+    var args = ["--app-name", "Omafocus", "-g", glyph, "-u", "normal",
+      "Omafocus finished", root.modeLabel + " is over. Take a break!"]
     if (omarchyPath !== "") {
       Quickshell.execDetached([omarchyPath + "/bin/omarchy-notification-send"].concat(args))
     } else {
@@ -219,7 +219,7 @@ Item {
     // Ship a custom chime next to the plugin; fall back to the stock
     // freedesktop alarm chime if the asset is not present.
     var pluginSound = Quickshell.env("HOME")
-      + "/.config/omarchy/plugins/pomodoro/assets/timer-end.oga"
+      + "/.config/omarchy/plugins/omafocus/assets/timer-end.oga"
     var stock = "/usr/share/sounds/freedesktop/stereo/alarm-clock-elapsed.oga"
     // A tiny wrapper: prefer the shipped asset, else the stock chime.
     var sh = "if [ -f '" + pluginSound + "' ]; then exec paplay '" + pluginSound
