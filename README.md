@@ -2,6 +2,8 @@
 
 A Pomodoro timer for the Omarchy bar: pick a focus or break duration from the panel, run a countdown, and get a desktop notification with a chime when time is up.
 
+![Omafocus](assets/screenshot.png)
+
 ## Install
 
 ```sh
